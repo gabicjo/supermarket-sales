@@ -10,3 +10,6 @@ df = df.set_index('data')
 
 vendas_por_filial = df.groupby('filial')['total'].agg(['sum', "count"]).reset_index().sort_values('sum', ascending=False)
 vendas_por_filial['sum'] = round(vendas_por_filial['sum'], 2)
+
+receita_por_linha = df.groupby('linha_produto')['renda_bruta'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
+receita_por_linha['sum'] = round(receita_por_linha['sum'], 2)
