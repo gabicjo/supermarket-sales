@@ -13,9 +13,9 @@ class Loja:
         vendas['sum'] = round(vendas['sum'], 2)
         return vendas
     
-    # * comida é o setor com mais faturamento
-    def receita_por_linha(self):
-        receita = self.df.groupby('linha_produto')['renda_bruta'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
+    # * comida é o setor com mais vendas
+    def vendas_por_linha(self):
+        receita = self.df.groupby('linha_produto')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         receita['sum'] = round(receita['sum'], 2)
         return receita
     
@@ -80,7 +80,11 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         return ranking
-
+    
+    # * o setor de comida continua sendo o maior triulfo da loja
+    def margem_bruta_por_categoria(self):
+        margem = self.df.groupby('linha_produto')['renda_bruta'].sum().reset_index().sort_values('renda_bruta', ascending=False)
+        return margem
 
 caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
@@ -89,4 +93,4 @@ df = pd.read_csv(arquivo, sep=',')
 
 mercado = Loja(df)
 
-print(mercado.ranking_por_genero())
+print(mercado.margem_bruta_por_categoria())
