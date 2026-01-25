@@ -19,12 +19,15 @@ class Loja:
         receita['sum'] = round(receita['sum'], 2)
         return receita
     
+    @property
     def quantidade_total(self):
         return self.df['quantidade'].sum()
     
+    @property
     def total_vendido(self):
         return self.df['total'].sum()
     
+    @property
     def ticket_medio(self):
         return round(self.df['total'].mean(), 2)
     
