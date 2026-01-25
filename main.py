@@ -55,6 +55,12 @@ class Loja:
 
         vendas = self.df.resample(periodo.upper())['total'].count().reset_index().sort_values('total', ascending=False)
         return vendas
-
-
+    
+    # * os clientes costumam comprar mais as 19h
+    # ! mas o volume maior de clientes acontece durante a tarde
+    def horarios_pico(self):
+        self.df['hora'] = pd.to_datetime(self.df['hora'], format='%H:%M').dt.hour
+        horarios = self.df.groupby('hora').size().reset_index(name='quantidade').sort_values('quantidade', ascending=False)
+        return horarios
+    
 mercado = Loja(df)
