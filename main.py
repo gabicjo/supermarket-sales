@@ -30,4 +30,6 @@ vendas_por_genero = df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).
 vendas_por_genero['sum'] = round(vendas_por_genero['sum'], 2)
 vendas_por_genero['mean'] = round(vendas_por_genero['mean'], 2)
 
-print(vendas_por_genero)
+# * os clientes preferem pagar com ewallet, mas gastam mais quando é no dinehiro.
+metodos_pagamento_mais_usados = df.groupby("pagamento")['total'].agg(["mean", 'count']).reset_index().sort_values('count', ascending=False)
+metodos_pagamento_mais_usados['mean'] = round(metodos_pagamento_mais_usados['mean'], 2)
