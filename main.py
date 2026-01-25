@@ -33,6 +33,7 @@ class Loja:
     
     # * as mulheres gastam mais que homens
     # ? as mulheres costumam dar avaliações positivas?
+    # ! não, as mulheres dão avaliações piores do que homens
     def vendas_por_genero(self):
         vendas = self.df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
@@ -59,16 +60,27 @@ class Loja:
         horarios = self.df.groupby('hora').size().reset_index(name='quantidade').sort_values('quantidade', ascending=False)
         return horarios
 
+    # * a filial C tem as melhores avaliações
     def ranking_por_filial(self):
         ranking = self.df.groupby('filial')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
         return ranking
 
+    # * alaviações relacionadas as comidas são geralmente melhores
+    # ! o setor de produtos pra casa tem o pior desempenho
     def ranking_por_categoria(self):
-        ranking = self.df.groupby('categoria')['avaliacao'].mean().reset_index(name="ranking").sor_values('ranking', ascending=False)
+        ranking = self.df.groupby('linha_produto')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         return ranking
+    
+    # * homens costumam dar melhores avaliações
+    def ranking_por_genero(self):
+        ranking = self.df.groupby('genero')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
+        ranking['ranking'] = round(ranking['ranking'], 2)
+
+        return ranking
+
 
 caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
@@ -77,4 +89,4 @@ df = pd.read_csv(arquivo, sep=',')
 
 mercado = Loja(df)
 
-print(mercado.ranking_por_filial())
+print(mercado.ranking_por_genero())
