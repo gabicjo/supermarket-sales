@@ -25,6 +25,9 @@ class Loja:
     def total_vendido(self):
         return self.df['total'].sum()
     
+    def ticket_medio(self):
+        return round(df['total'].mean(), 2)
+    
     # * membros gastam mais
     def vendas_por_tipo_cliente(self):
         vendas = self.df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
@@ -93,4 +96,4 @@ df = pd.read_csv(arquivo, sep=',')
 
 mercado = Loja(df)
 
-print(mercado.margem_bruta_por_categoria())
+print()
