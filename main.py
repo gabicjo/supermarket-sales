@@ -26,7 +26,7 @@ class Loja:
         return self.df['total'].sum()
     
     def ticket_medio(self):
-        return round(df['total'].mean(), 2)
+        return round(self.df['total'].mean(), 2)
     
     # * membros gastam mais
     def vendas_por_tipo_cliente(self):
@@ -88,6 +88,13 @@ class Loja:
     def margem_bruta_por_categoria(self):
         margem = self.df.groupby('linha_produto')['renda_bruta'].sum().reset_index().sort_values('renda_bruta', ascending=False)
         return margem
+    
+    # * membros costuma  gastar um pouco mais
+    def ticket_por_tipo_cliente(self):
+        ticket = self.df.groupby('tipo_cliente')['total'].mean().reset_index(name='ticket-medio').sort_values('ticket-medio', ascending=False)
+        ticket['ticket-medio'] = round(ticket['ticket-medio'], 2)
+
+        return ticket
 
 caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
@@ -96,4 +103,4 @@ df = pd.read_csv(arquivo, sep=',')
 
 mercado = Loja(df)
 
-print()
+print(mercado.ticket_por_tipo_cliente())
