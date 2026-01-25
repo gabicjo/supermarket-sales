@@ -5,28 +5,10 @@ caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
-df['data'] = pd.to_datetime(df['data'])
-df = df.set_index('data')
 
 class Loja:
-    def __init__(self, df, id_fatura, filial, cidade, tipo_cliente, genero, linha_produto, preco_unitario, quantidade, imposto_5pct, total, hora, pagamento, custo_mercadorias, pct_margem_bruta, renda_bruta, avaliacao):
+    def __init__(self, df: pd.DataFrame):
         self.df = df
-        self.id_fatura = id_fatura
-        self.filial = filial
-        self.cidade = cidade
-        self.tipo_cliente = tipo_cliente
-        self.genero = genero
-        self.linha_produto = linha_produto
-        self.preco_unitario = preco_unitario
-        self.quantidade = quantidade
-        self.imposto_5pct = imposto_5pct
-        self.total = total
-        self.hora = hora
-        self.pagamento = pagamento
-        self.custo_mercadorias = custo_mercadorias
-        self.pct_margem_bruta = pct_margem_bruta
-        self.renda_bruta = renda_bruta
-        self.avaliacao = avaliacao
     
     # * A filial C tem maior faturamento
     # ! Sera que as avaliações delas são boas?
@@ -67,26 +49,12 @@ class Loja:
         metodos['mean'] = round(metodos['mean'], 2)
         return metodos
     
-    def vendas_por_periodo(self):
-        vendas = df.groupby()
+    def vendas_por_periodo(self, periodo: str = 'ME'):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index('data')
+
+        vendas = self.df.resample(periodo.upper())['total'].count().reset_index().sort_values('total', ascending=False)
+        return vendas
 
 
-mercado = Loja(
-    df=df,
-    id_fatura=df['id_fatura'],
-    filial=df['filial'],
-    cidade=df['cidade'],
-    tipo_cliente=df['tipo_cliente'],
-    genero=df['genero'],
-    linha_produto=df['linha_produto'],
-    preco_unitario=df['preco_unitario'],
-    quantidade=df['quantidade'],
-    imposto_5pct=df['imposto_5pct'],
-    total=df['total'],
-    hora=df['hora'],
-    pagamento=df['pagamento'],
-    custo_mercadorias=df['custo_mercadorias_vendidas'],
-    pct_margem_bruta=df['percentual_margem_bruta'],
-    renda_bruta=df['renda_bruta'],
-    avaliacao=df['avaliacao']
-)
+mercado = Loja(df)
