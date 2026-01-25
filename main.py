@@ -9,7 +9,8 @@ df['data'] = pd.to_datetime(df['data'])
 df = df.set_index('data')
 
 class Loja:
-    def __init__(self, id_fatura, filial, cidade, tipo_cliente, genero, linha_produto, preco_unitario, quantidade, imposto_5pct, total, hora, pagamento, custo_mercadorias, pct_margem_bruta, renda_bruta, avaliacao):
+    def __init__(self, df, id_fatura, filial, cidade, tipo_cliente, genero, linha_produto, preco_unitario, quantidade, imposto_5pct, total, hora, pagamento, custo_mercadorias, pct_margem_bruta, renda_bruta, avaliacao):
+        self.df = df
         self.id_fatura = id_fatura
         self.filial = filial
         self.cidade = cidade
@@ -30,44 +31,48 @@ class Loja:
     # * A filial C tem maior faturamento
     # ! Sera que as avaliações delas são boas?
     def vendas_por_filial(self):
-        vendas = df.groupby('filial')['total'].agg(['sum', "count"]).reset_index().sort_values('sum', ascending=False)
+        vendas = self.df.groupby('filial')['total'].agg(['sum', "count"]).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
         return vendas
     
     # * comida é o setor com mais faturamento
     def receita_por_linha(self):
-        receita = df.groupby('linha_produto')['renda_bruta'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
+        receita = self.df.groupby('linha_produto')['renda_bruta'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         receita['sum'] = round(receita['sum'], 2)
         return receita
     
     def quantidade_total(self):
-        return df['quantidade'].sum()
+        return self.df['quantidade'].sum()
     
     def total_vendido(self):
-        return df['total'].sum()
+        return self.df['total'].sum()
     
     # * membros gastam mais
     def vendas_por_tipo_cliente(self):
-        vendas = df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
+        vendas = self.df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
         return vendas
     
     # * as mulheres gastam mais que homens
     # ! as mulheres costumam dar avaliações positivas?
     def vendas_por_genero(self):
-        vendas = df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).reset_index().sort_values('sum', ascending=False)
+        vendas = self.df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
         vendas['mean'] = round(vendas['mean'], 2)
         return vendas
     
     # * os clientes preferem pagar com ewallet, mas gastam mais quando é no dinehiro.
     def metodos_pagamento_mais_usados(self):
-        metodos = df.groupby("pagamento")['total'].agg(["mean", 'count']).reset_index().sort_values('count', ascending=False)
+        metodos = self.df.groupby("pagamento")['total'].agg(["mean", 'count']).reset_index().sort_values('count', ascending=False)
         metodos['mean'] = round(metodos['mean'], 2)
         return metodos
+    
+    def vendas_por_periodo(self):
+        vendas = df.groupby()
 
 
 mercado = Loja(
+    df=df,
     id_fatura=df['id_fatura'],
     filial=df['filial'],
     cidade=df['cidade'],
@@ -80,8 +85,8 @@ mercado = Loja(
     total=df['total'],
     hora=df['hora'],
     pagamento=df['pagamento'],
-    custo_mercadorias=df['custo_mercadorias'],
-    pct_margem_bruta=df['pct_margem_bruta'],
+    custo_mercadorias=df['custo_mercadorias_vendidas'],
+    pct_margem_bruta=df['percentual_margem_bruta'],
     renda_bruta=df['renda_bruta'],
     avaliacao=df['avaliacao']
 )
