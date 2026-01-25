@@ -23,3 +23,11 @@ total_vendido = df['total'].sum()
 # * membros gastam mais
 vendas_por_tipo_cliente = df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
 vendas_por_tipo_cliente['sum'] = round(vendas_por_tipo_cliente['sum'], 2)
+
+# * as mulheres gastam mais que homens
+# ! as mulheres costumam dar avaliações positivas?
+vendas_por_genero = df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).reset_index().sort_values('sum', ascending=False)
+vendas_por_genero['sum'] = round(vendas_por_genero['sum'], 2)
+vendas_por_genero['mean'] = round(vendas_por_genero['mean'], 2)
+
+print(vendas_por_genero)
