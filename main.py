@@ -98,12 +98,3 @@ class Loja:
         ticket['ticket-medio'] = round(ticket['ticket-medio'], 2)
 
         return ticket
-
-caminho = Path('dados')
-arquivo = caminho / 'supermarket_sales.csv'
-
-df = pd.read_csv(arquivo, sep=',')
-
-mercado = Loja(df)
-
-print(mercado.ticket_por_tipo_cliente())
