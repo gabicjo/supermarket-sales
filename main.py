@@ -1,5 +1,6 @@
 import pandas as pd
 from pathlib import Path
+import plotly.express as px
 
 class Loja:
     def __init__(self, df: pd.DataFrame):
@@ -11,25 +12,18 @@ class Loja:
     def vendas_por_filial(self):
         vendas = self.df.groupby('filial')['total'].agg(['sum', "count"]).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
-        return vendas
+
+        fig = px.bar(vendas, 'filial', 'sum', title='Vendas por Filial', color='filial')
+        fig.update_layout(xaxis_title='Filiais', yaxis_title='Faturamento')
+
+        return fig.show()
     
     # * comida é o setor com mais vendas
     def vendas_por_linha(self):
-        receita = self.df.groupby('linha_produto')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
-        receita['sum'] = round(receita['sum'], 2)
-        return receita
-    
-    @property
-    def quantidade_total(self):
-        return self.df['quantidade'].sum()
-    
-    @property
-    def total_vendido(self):
-        return self.df['total'].sum()
-    
-    @property
-    def ticket_medio(self):
-        return round(self.df['total'].mean(), 2)
+        vendas = self.df.groupby('linha_produto')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
+        vendas['sum'] = round(vendas['sum'], 2)
+
+        return vendas
     
     # * membros gastam mais
     def vendas_por_tipo_cliente(self):
@@ -46,18 +40,30 @@ class Loja:
         vendas['mean'] = round(vendas['mean'], 2)
         return vendas
     
-    # * os clientes preferem pagar com ewallet, mas gastam mais quando é no dinehiro.
-    def metodos_pagamento_mais_usados(self):
-        metodos = self.df.groupby("pagamento")['total'].agg(["mean", 'count']).reset_index().sort_values('count', ascending=False)
-        metodos['mean'] = round(metodos['mean'], 2)
-        return metodos
-    
     def vendas_por_periodo(self, periodo: str = 'ME'):
         self.df['data'] = pd.to_datetime(self.df['data'])
         self.df = self.df.set_index('data')
 
         vendas = self.df.resample(periodo.upper())['total'].count().reset_index().sort_values('total', ascending=False)
         return vendas
+
+    @property
+    def quantidade_total(self):
+        return self.df['quantidade'].sum()
+    
+    @property
+    def total_vendido(self):
+        return self.df['total'].sum()
+    
+    @property
+    def ticket_medio(self):
+        return round(self.df['total'].mean(), 2)
+
+    # * os clientes preferem pagar com ewallet, mas gastam mais quando é no dinehiro.
+    def metodos_pagamento_mais_usados(self):
+        metodos = self.df.groupby("pagamento")['total'].agg(["mean", 'count']).reset_index().sort_values('count', ascending=False)
+        metodos['mean'] = round(metodos['mean'], 2)
+        return metodos
     
     # * os clientes costumam comprar mais as 19h
     # ! mas o volume maior de clientes acontece durante a tarde
@@ -98,3 +104,11 @@ class Loja:
         ticket['ticket-medio'] = round(ticket['ticket-medio'], 2)
 
         return ticket
+    
+caminho = Path('dados')
+arquivo = caminho / 'supermarket_sales.csv'
+
+df = pd.read_csv(arquivo, sep=',')
+mercado = Loja(df)
+
+mercado.vendas_por_filial()
