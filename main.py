@@ -51,12 +51,15 @@ class Loja:
 
         return fig.show()
     
-    def vendas_por_periodo(self, periodo: str = 'ME'):
+    def vendas_por_periodo(self, periodo: str = 'W'):
         self.df['data'] = pd.to_datetime(self.df['data'])
-        self.df = self.df.set_index('data')
 
-        vendas = self.df.resample(periodo.upper())['total'].count().reset_index().sort_values('total', ascending=False)
-        return vendas
+        vendas = self.df.set_index('data').resample(periodo.upper())['total'].sum().reset_index()
+
+        fig = px.line(vendas, 'data', 'total', title='Vendas por Periodo', markers=True)
+        fig.update_layout(xaxis_title='Periodo', yaxis_title='Faturamento')
+
+        return fig.show()
 
     @property
     def quantidade_total(self):
@@ -121,5 +124,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
-
-mercado.vendas_por_genero()
+print(mercado.vendas_por_periodo())
