@@ -23,12 +23,18 @@ class Loja:
         vendas = self.df.groupby('linha_produto')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
 
-        return vendas
+        fig = px.bar(vendas, x='linha_produto', y='sum', color='linha_produto', title='Vendas por Linha')
+        fig.update_layout(xaxis_title='Linhas', yaxis_title='Faturamento')
+
+        return fig.show()
     
     # * membros gastam mais
     def vendas_por_tipo_cliente(self):
         vendas = self.df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
+
+        fig = px.
+
         return vendas
     
     # * as mulheres gastam mais que homens
