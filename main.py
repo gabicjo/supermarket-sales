@@ -46,7 +46,10 @@ class Loja:
         vendas['sum'] = round(vendas['sum'], 2)
         vendas['mean'] = round(vendas['mean'], 2)
 
-        return vendas
+        fig = px.bar(vendas, 'genero', 'sum', title='Vendas por Genero', color='genero')
+        fig.update_layout(xaxis_title='Genero do Cliente', yaxis_title='Faturamento')
+
+        return fig.show()
     
     def vendas_por_periodo(self, periodo: str = 'ME'):
         self.df['data'] = pd.to_datetime(self.df['data'])
@@ -119,4 +122,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
 
-mercado.vendas_por_tipo_cliente()
+mercado.vendas_por_genero()
