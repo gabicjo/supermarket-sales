@@ -33,9 +33,10 @@ class Loja:
         vendas = self.df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
 
-        fig = px.
+        fig = px.bar(vendas, 'tipo_cliente', 'sum', title="Vendas por Tipo de Cliente", color='tipo_cliente')
+        fig.update_layout(xaxis_title='Tipo de Cliente', yaxis_title='Faturamento')
 
-        return vendas
+        return fig.show()
     
     # * as mulheres gastam mais que homens
     # ? as mulheres costumam dar avaliações positivas?
@@ -44,6 +45,7 @@ class Loja:
         vendas = self.df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
         vendas['mean'] = round(vendas['mean'], 2)
+
         return vendas
     
     def vendas_por_periodo(self, periodo: str = 'ME'):
@@ -117,4 +119,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
 
-mercado.vendas_por_filial()
+mercado.vendas_por_tipo_cliente()
