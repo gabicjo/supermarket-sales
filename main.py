@@ -120,7 +120,7 @@ class Loja:
     def ranking_por_genero(self):
         ranking = self.df.groupby('genero')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
-        
+
         fig = px.bar(ranking, 'genero', 'ranking', color='genero', title='Ranking de avaliações por Genero')
         fig.update_layout(xaxis_title='Genero do cliente', yaxis_title='Media de Avaliação')
 
@@ -129,7 +129,11 @@ class Loja:
     # * o setor de comida continua sendo o maior triulfo da loja
     def margem_bruta_por_categoria(self):
         margem = self.df.groupby('linha_produto')['renda_bruta'].sum().reset_index().sort_values('renda_bruta', ascending=False)
-        return margem
+
+        fig = px.pie(margem, 'linha_produto', 'renda_bruta', color='linha_produto', title='Faturamento Bruto por Linha de Produto')
+        fig.update_traces(textposition='inside', textinfo='percent+label')
+
+        return fig.show()
     
     # * membros costuma  gastar um pouco mais
     def ticket_por_tipo_cliente(self):
@@ -143,4 +147,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
-mercado.ranking_por_categoria()
+mercado.margem_bruta_por_categoria()
