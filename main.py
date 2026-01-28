@@ -120,8 +120,11 @@ class Loja:
     def ranking_por_genero(self):
         ranking = self.df.groupby('genero')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
+        
+        fig = px.bar(ranking, 'genero', 'ranking', color='genero', title='Ranking de avaliações por Genero')
+        fig.update_layout(xaxis_title='Genero do cliente', yaxis_title='Media de Avaliação')
 
-        return ranking
+        return fig.show()
     
     # * o setor de comida continua sendo o maior triulfo da loja
     def margem_bruta_por_categoria(self):
