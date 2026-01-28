@@ -75,9 +75,13 @@ class Loja:
 
     # * os clientes preferem pagar com ewallet, mas gastam mais quando é no dinehiro.
     def metodos_pagamento_mais_usados(self):
-        metodos = self.df.groupby("pagamento")['total'].agg(["mean", 'count']).reset_index().sort_values('count', ascending=False)
+        metodos = self.df.groupby("pagamento")['total'].agg(["mean", 'count', 'sum']).reset_index().sort_values('count', ascending=False)
         metodos['mean'] = round(metodos['mean'], 2)
-        return metodos
+
+        fig = px.pie(metodos, 'pagamento', 'sum', color='pagamento', title='Metodos de Pagamento Mais Usados')
+        fig.update_traces(textposition='inside', textinfo='percent+label')
+
+        return fig.show()
     
     # * os clientes costumam comprar mais as 19h
     # ! mas o volume maior de clientes acontece durante a tarde
@@ -124,4 +128,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
-print(mercado.vendas_por_periodo())
+mercado.metodos_pagamento_mais_usados()
