@@ -99,7 +99,11 @@ class Loja:
     def ranking_por_filial(self):
         ranking = self.df.groupby('filial')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
-        return ranking
+
+        fig = px.bar(ranking, 'filial', 'ranking', color='filial', title='Ranking de Avaliações por Filial', range_y=[0, 10])
+        fig.update_layout(xaxis_title='Filial', yaxis_title='Media de Avaliações')
+
+        return fig.show()
 
     # * alaviações relacionadas as comidas são geralmente melhores
     # ! o setor de produtos pra casa tem o pior desempenho
@@ -107,7 +111,10 @@ class Loja:
         ranking = self.df.groupby('linha_produto')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
 
-        return ranking
+        fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', title='Ranking de Avaliações por Linha', range_y=[0, 10])
+        fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações')
+        
+        return fig.show()
     
     # * homens costumam dar melhores avaliações
     def ranking_por_genero(self):
@@ -133,4 +140,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
-mercado.horarios_pico()
+mercado.ranking_por_categoria()
