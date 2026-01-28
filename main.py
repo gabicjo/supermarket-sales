@@ -137,14 +137,16 @@ class Loja:
     
     # * membros costuma  gastar um pouco mais
     def ticket_por_tipo_cliente(self):
-        ticket = self.df.groupby('tipo_cliente')['total'].mean().reset_index(name='ticket-medio').sort_values('ticket-medio', ascending=False)
-        ticket['ticket-medio'] = round(ticket['ticket-medio'], 2)
+        ticket = self.df.groupby('tipo_cliente')['total'].mean().reset_index(name='ticket_medio').sort_values('ticket_medio', ascending=False)
+        ticket['ticket_medio'] = round(ticket['ticket_medio'], 2)
 
-        return ticket
+        fig = px.bar(ticket, 'tipo_cliente', 'ticket_medio', title='Ticket medio por tipo de cliente', color='tipo_cliente')
+        fig.update_layout(xaxis_title='Tipo de cliente', yaxis_title='Ticket Medio')
+
+        return fig.show()
     
 caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
-mercado.margem_bruta_por_categoria()
