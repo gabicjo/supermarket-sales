@@ -87,8 +87,13 @@ class Loja:
     # ! mas o volume maior de clientes acontece durante a tarde
     def horarios_pico(self):
         self.df['hora'] = pd.to_datetime(self.df['hora'], format='%H:%M').dt.hour
-        horarios = self.df.groupby('hora').size().reset_index(name='quantidade').sort_values('quantidade', ascending=False)
-        return horarios
+        horarios = self.df.groupby('hora').size().reset_index(name='quantidade')
+        
+        fig = px.line(horarios, 'hora', 'quantidade', title='Horarios de pico', markers=True)
+        fig.update_traces(line_shape='spline', line_smoothing=1.3)
+        fig.update_layout(xaxis_title='Horarios', yaxis_title='Numero de Vendas')
+
+        return fig.show()
 
     # * a filial C tem as melhores avaliações
     def ranking_por_filial(self):
@@ -128,4 +133,4 @@ arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
 mercado = Loja(df)
-mercado.metodos_pagamento_mais_usados()
+mercado.horarios_pico()
