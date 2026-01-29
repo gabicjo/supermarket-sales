@@ -17,7 +17,7 @@ class Loja:
         if grafico:
             fig = px.bar(vendas, 'filial', 'sum', title='Vendas por Filial', color='filial')
             fig.update_layout(xaxis_title='Filiais', yaxis_title='Faturamento', showlegend=False, bargap=0.5)
-            fig.show()
+            return fig
         else:
             print(vendas)
     
@@ -29,7 +29,7 @@ class Loja:
         if grafico:
             fig = px.bar(vendas, x='linha_produto', y='sum', color='linha_produto', title='Vendas por Linha')
             fig.update_layout(xaxis_title='Linhas', yaxis_title='Faturamento', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(vendas)
     
@@ -41,7 +41,7 @@ class Loja:
         if grafico:
             fig = px.bar(vendas, 'tipo_cliente', 'sum', title="Vendas por Tipo de Cliente", color='tipo_cliente')
             fig.update_layout(xaxis_title='Tipo de Cliente', yaxis_title='Faturamento', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(vendas)
     
@@ -56,7 +56,7 @@ class Loja:
         if grafico:
             fig = px.bar(vendas, 'genero', 'sum', title='Vendas por Genero', color='genero')
             fig.update_layout(xaxis_title='Genero do Cliente', yaxis_title='Faturamento', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(vendas)
     
@@ -68,7 +68,7 @@ class Loja:
         if grafico:
             fig = px.line(vendas, 'data', 'total', title='Vendas por Periodo', markers=True)
             fig.update_layout(xaxis_title='Periodo', yaxis_title='Faturamento', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(vendas)
 
@@ -92,7 +92,7 @@ class Loja:
         if grafico:
             fig = px.pie(metodos, 'pagamento', 'sum', color='pagamento', title='Metodos de Pagamento Mais Usados')
             fig.update_traces(textposition='inside', textinfo='percent+label')
-            fig.show()
+            return fig
         else:
             print(metodos)
     
@@ -106,7 +106,7 @@ class Loja:
             fig = px.line(horarios, 'hora', 'quantidade', title='Horarios de pico', markers=True)
             fig.update_traces(line_shape='spline', line_smoothing=1.3)
             fig.update_layout(xaxis_title='Horarios', yaxis_title='Numero de Vendas', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(horarios)
 
@@ -118,7 +118,7 @@ class Loja:
         if grafico:
             fig = px.bar(ranking, 'filial', 'ranking', color='filial', title='Ranking de Avaliações por Filial', range_y=[0, 10])
             fig.update_layout(xaxis_title='Filial', yaxis_title='Media de Avaliações', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(ranking)
 
@@ -131,7 +131,7 @@ class Loja:
         if grafico:
             fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', title='Ranking de Avaliações por Linha', range_y=[0, 10])
             fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(ranking)
     
@@ -143,7 +143,7 @@ class Loja:
         if grafico:
             fig = px.bar(ranking, 'genero', 'ranking', color='genero', title='Ranking de avaliações por Genero')
             fig.update_layout(xaxis_title='Genero do cliente', yaxis_title='Media de Avaliação', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(ranking)
     
@@ -154,7 +154,7 @@ class Loja:
         if grafico:
             fig = px.pie(margem, 'linha_produto', 'renda_bruta', color='linha_produto', title='Faturamento Bruto por Linha de Produto')
             fig.update_traces(textposition='inside', textinfo='percent+label')
-            fig.show()
+            return fig
         else:
             print(margem)
     
@@ -166,7 +166,7 @@ class Loja:
         if grafico:
             fig = px.bar(ticket, 'tipo_cliente', 'ticket_medio', title='Ticket medio por tipo de cliente', color='tipo_cliente')
             fig.update_layout(xaxis_title='Tipo de cliente', yaxis_title='Ticket Medio', showlegend=False)
-            fig.show()
+            return fig
         else:
             print(ticket)
     
@@ -174,6 +174,4 @@ caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
-mercado = Loja(df=df)
-
-mercado.vendas_por_genero()
+store = Loja(df=df)
