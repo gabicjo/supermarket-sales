@@ -116,7 +116,7 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
-            fig = px.bar(ranking, 'filial', 'ranking', color='filial', range_y=[0, 10])
+            fig = px.bar(ranking, 'filial', 'ranking', color='filial')
             fig.update_layout(xaxis_title='Filial', yaxis_title='Media de Avaliações', showlegend=False)
             return fig
         else:
@@ -129,7 +129,7 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
-            fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', range_y=[0, 10])
+            fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto')
             fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações', showlegend=False)
             return fig
         else:
