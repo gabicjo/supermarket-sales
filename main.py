@@ -15,7 +15,7 @@ class Loja:
         vendas['sum'] = round(vendas['sum'], 2)
 
         if grafico:
-            fig = px.bar(vendas, 'filial', 'sum', title='Vendas por Filial', color='filial')
+            fig = px.bar(vendas, 'filial', 'sum', color='filial')
             fig.update_layout(xaxis_title='Filiais', yaxis_title='Faturamento', showlegend=False, bargap=0.5)
             return fig
         else:
@@ -27,7 +27,7 @@ class Loja:
         vendas['sum'] = round(vendas['sum'], 2)
         
         if grafico:
-            fig = px.bar(vendas, x='linha_produto', y='sum', color='linha_produto', title='Vendas por Linha')
+            fig = px.bar(vendas, x='linha_produto', y='sum', color='linha_produto')
             fig.update_layout(xaxis_title='Linhas', yaxis_title='Faturamento', showlegend=False)
             return fig
         else:
@@ -39,7 +39,7 @@ class Loja:
         vendas['sum'] = round(vendas['sum'], 2)
 
         if grafico:
-            fig = px.bar(vendas, 'tipo_cliente', 'sum', title="Vendas por Tipo de Cliente", color='tipo_cliente')
+            fig = px.bar(vendas, 'tipo_cliente', 'sum', color='tipo_cliente')
             fig.update_layout(xaxis_title='Tipo de Cliente', yaxis_title='Faturamento', showlegend=False)
             return fig
         else:
@@ -54,7 +54,7 @@ class Loja:
         vendas['mean'] = round(vendas['mean'], 2)
 
         if grafico:
-            fig = px.bar(vendas, 'genero', 'sum', title='Vendas por Genero', color='genero')
+            fig = px.bar(vendas, 'genero', 'sum', color='genero')
             fig.update_layout(xaxis_title='Genero do Cliente', yaxis_title='Faturamento', showlegend=False)
             return fig
         else:
@@ -66,7 +66,7 @@ class Loja:
         vendas = self.df.set_index('data').resample(periodo.upper())['total'].sum().reset_index()
 
         if grafico:
-            fig = px.line(vendas, 'data', 'total', title='Vendas por Periodo', markers=True)
+            fig = px.line(vendas, 'data', 'total', markers=True)
             fig.update_layout(xaxis_title='Periodo', yaxis_title='Faturamento', showlegend=False)
             return fig
         else:
@@ -90,7 +90,7 @@ class Loja:
         metodos['mean'] = round(metodos['mean'], 2)
 
         if grafico:
-            fig = px.pie(metodos, 'pagamento', 'sum', color='pagamento', title='Metodos de Pagamento Mais Usados')
+            fig = px.pie(metodos, 'pagamento', 'sum', color='pagamento')
             fig.update_traces(textposition='inside', textinfo='percent+label')
             return fig
         else:
@@ -103,7 +103,7 @@ class Loja:
         horarios = self.df.groupby('hora').size().reset_index(name='quantidade')
         
         if grafico:
-            fig = px.line(horarios, 'hora', 'quantidade', title='Horarios de pico', markers=True)
+            fig = px.line(horarios, 'hora', 'quantidade', markers=True)
             fig.update_traces(line_shape='spline', line_smoothing=1.3)
             fig.update_layout(xaxis_title='Horarios', yaxis_title='Numero de Vendas', showlegend=False)
             return fig
@@ -116,7 +116,7 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
-            fig = px.bar(ranking, 'filial', 'ranking', color='filial', title='Ranking de Avaliações por Filial', range_y=[0, 10])
+            fig = px.bar(ranking, 'filial', 'ranking', color='filial', range_y=[0, 10])
             fig.update_layout(xaxis_title='Filial', yaxis_title='Media de Avaliações', showlegend=False)
             return fig
         else:
@@ -129,7 +129,7 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
-            fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', title='Ranking de Avaliações por Linha', range_y=[0, 10])
+            fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', range_y=[0, 10])
             fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações', showlegend=False)
             return fig
         else:
@@ -141,7 +141,7 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
-            fig = px.bar(ranking, 'genero', 'ranking', color='genero', title='Ranking de avaliações por Genero')
+            fig = px.bar(ranking, 'genero', 'ranking', color='genero')
             fig.update_layout(xaxis_title='Genero do cliente', yaxis_title='Media de Avaliação', showlegend=False)
             return fig
         else:
@@ -152,7 +152,7 @@ class Loja:
         margem = self.df.groupby('linha_produto')['renda_bruta'].sum().reset_index().sort_values('renda_bruta', ascending=False)
 
         if grafico:
-            fig = px.pie(margem, 'linha_produto', 'renda_bruta', color='linha_produto', title='Faturamento Bruto por Linha de Produto')
+            fig = px.pie(margem, 'linha_produto', 'renda_bruta', color='linha_produto')
             fig.update_traces(textposition='inside', textinfo='percent+label')
             return fig
         else:
@@ -164,7 +164,7 @@ class Loja:
         ticket['ticket_medio'] = round(ticket['ticket_medio'], 2)
 
         if grafico:
-            fig = px.bar(ticket, 'tipo_cliente', 'ticket_medio', title='Ticket medio por tipo de cliente', color='tipo_cliente')
+            fig = px.bar(ticket, 'tipo_cliente', 'ticket_medio', color='tipo_cliente')
             fig.update_layout(xaxis_title='Tipo de cliente', yaxis_title='Ticket Medio', showlegend=False)
             return fig
         else:
