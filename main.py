@@ -253,6 +253,7 @@ class Loja:
 
 
 
+
 caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
 
