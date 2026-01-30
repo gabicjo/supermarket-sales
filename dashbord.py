@@ -1,4 +1,4 @@
-from main import store
+from main import store, df
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -6,9 +6,10 @@ import locale
 
 # extrair dados
 lista_fat = ('Faturamento por Filial', 'Faturamento por Linha', 'Faturamento por Genero', 'Faturamento por Tipo de Cliente')
-
+lista_rank = ('Ranking por Filial', 'Ranking por Linha de Produto', 'Ranking por Genero')
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-nome = "Gabriel"
+
+nome = 'Gabriel'
 
 def moeda_local(valor):
     return locale.currency(valor, grouping=True)
