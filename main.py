@@ -235,6 +235,22 @@ class Loja:
 
         else:
             return ticket
+    
+    def ticket_medio_por_periodo(self):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+        ticket = self.df.resample('2W')['total'].mean().reset_index()
+
+        return ticket
+    
+    def quantidade_por_periodo(self):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+        quantidade = self.df.resample('2W')['quantidade'].count().reset_index()
+
+        return quantidade
+
+
 
 
 caminho = Path('dados')
