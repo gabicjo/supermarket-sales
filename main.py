@@ -268,7 +268,7 @@ class Loja:
             return fig
 
         else:
-            return margem
+            return resumo
 
 
 
