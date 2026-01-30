@@ -1,4 +1,4 @@
-from main import store
+from main import store, df
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -10,6 +10,9 @@ lista_rank = ('Ranking por Filial', 'Ranking por Linha de Produto', 'Ranking por
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 nome = 'Gabriel'
+
+def moeda_local(valor):
+    return locale.currency(valor, grouping=True)
 
 # tratar aquilo que vem da interface
 st.set_page_config(layout='wide', page_title='Dashboard Supermercado')
@@ -26,32 +29,78 @@ ctn_metodos_pagamento.plotly_chart(store.metodos_pagamento_mais_usados(), use_co
 
 with col1:
     a, b, c = st.columns(3)
-    a.metric("📦 Produtos Vendidos:",  locale.currency(store.quantidade_total, grouping=True), border=True)
-    b.metric("💰 Faturamento Total:",  locale.currency(store.total_vendido, grouping=True), border=True)
-    c.metric("🎫 Ticket Medio:", locale.currency(store.ticket_medio, grouping=True), border=True)
 
-col1.plotly_chart(store.vendas_por_periodo())
+    a.metric(
+        "📦 Produtos Vendidos:", 
+        store.quantidade_total, 
+        border=True, 
+        chart_data=list(store.quantidade_por_periodo()['quantidade']), 
+        chart_type='Area', 
+        delta=list(store.quantidade_por_periodo()['quantidade'])[-1]
+        )
 
-st.write("### Grafico de Faturamento")
-fat_choice = st.selectbox('Escolha um tipo de Grafico para exibir seu Faturamento', lista_fat)
+    b.metric(
+        "💰 Faturamento Total:", 
+        moeda_local(store.total_vendido), 
+        border=True, 
+        chart_data=list(store.vendas_por_periodo(grafico=False)['total']), 
+        chart_type='Area', 
+        delta=moeda_local(list(store.vendas_por_periodo(grafico=False)['total'])[-1])
+        )
+
+    c.metric(
+        "🎫 Ticket Medio:", 
+        locale.currency(store.ticket_medio, grouping=True), 
+        border=True, 
+        chart_data=list(store.ticket_medio_por_periodo()['total']), 
+        chart_type='Area',
+        delta=moeda_local(list(store.ticket_medio_por_periodo()['total'])[-1])
+        )
+
+    st.plotly_chart(store.comparativo_faturamento())
+
+ctn_faturamento = st.container(border=True)
+ctn_avaliações = st.container(border=True)
+
+ctn_faturamento.write("### 📊 Grafico de Faturamento")
+ctn_faturamento.write("Acompanhe o faturamento do seu negocio atravez de diferentes aspectos! Selecione um abaixo:")
+
+fat_choice = ctn_faturamento.pills(
+    "Tipo de Grafico",
+    lista_fat,
+    selection_mode='single',
+    label_visibility='collapsed',
+    default='Faturamento por Filial'
+)
 
 if fat_choice == lista_fat[0]:
-    st.plotly_chart(store.vendas_por_filial())
+    ctn_faturamento.plotly_chart(store.vendas_por_filial())
+
 elif fat_choice == lista_fat[1]:
-    st.plotly_chart(store.vendas_por_linha())
+    ctn_faturamento.plotly_chart(store.vendas_por_linha())
+
 elif fat_choice == lista_fat[2]:
-    st.plotly_chart(store.vendas_por_genero())
+    ctn_faturamento.plotly_chart(store.vendas_por_genero())
+
 elif fat_choice == lista_fat[3]:
-    st.plotly_chart(store.vendas_por_tipo_cliente())
+    ctn_faturamento.plotly_chart(store.vendas_por_tipo_cliente())
 
-st.divider()
+ctn_avaliações.write('### ⭐ Grafico de Avaliações')
+ctn_avaliações.write("Companhe o que as pessoas pensam sobre seu negocio atravez de diferentes aspectos! Selecione um deles abaixo: ")
 
-st.write('### Grafico de Avaliações')
-rank_choice = st.selectbox("Escolha um tipo de grafico para exibir seu Ranking", lista_rank)
+rank_choice = ctn_avaliações.pills(
+    "Tipo de Grafico",
+    lista_rank,
+    selection_mode='single',
+    label_visibility='collapsed',
+    default='Ranking por Filial'
+)
 
 if rank_choice == lista_rank[0]:
-    st.plotly_chart(store.ranking_por_filial())
+    ctn_avaliações.plotly_chart(store.ranking_por_filial())
+
 elif rank_choice == lista_rank[1]:
-    st.plotly_chart(store.ranking_por_categoria())
+    ctn_avaliações.plotly_chart(store.ranking_por_categoria())
+    
 elif rank_choice == lista_rank[2]:
-    st.plotly_chart(store.ranking_por_genero())
+    ctn_avaliações.plotly_chart(store.ranking_por_genero())
