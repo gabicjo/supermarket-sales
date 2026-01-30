@@ -6,48 +6,58 @@ class Loja:
     def __init__(self, df: pd.DataFrame):
         self.df = df
     
-    
-    # * A filial C tem maior faturamento
-    # ? Sera que as avaliações delas são boas?
-    # ! Sim, a filial c tem as melhoras avaliações
     def vendas_por_filial(self, grafico: bool = True):
         vendas = self.df.groupby('filial')['total'].agg(['sum', "count"]).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
 
         if grafico:
             fig = px.bar(vendas, 'filial', 'sum', color='filial')
-            fig.update_layout(xaxis_title='Filiais', yaxis_title='Faturamento', showlegend=False, bargap=0.5)
+            fig.update_layout(
+                xaxis_title='Filiais', 
+                yaxis_title='Faturamento', 
+                showlegend=False, 
+                bargap=0.5
+                )
+
             return fig
+
         else:
-            print(vendas)
+            return vendas
     
-    # * comida é o setor com mais vendas
     def vendas_por_linha(self, grafico: bool = True):
         vendas = self.df.groupby('linha_produto')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
-        
+
         if grafico:
             fig = px.bar(vendas, x='linha_produto', y='sum', color='linha_produto')
-            fig.update_layout(xaxis_title='Linhas', yaxis_title='Faturamento', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Linhas',
+                yaxis_title='Faturamento',
+                showlegend=False
+            )
+
             return fig
+
         else:
-            print(vendas)
+            return vendas
     
-    # * membros gastam mais
     def vendas_por_tipo_cliente(self, grafico: bool = True):
         vendas = self.df.groupby('tipo_cliente')['total'].agg(['sum', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
 
         if grafico:
             fig = px.bar(vendas, 'tipo_cliente', 'sum', color='tipo_cliente')
-            fig.update_layout(xaxis_title='Tipo de Cliente', yaxis_title='Faturamento', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Tipo de Cliente',
+                yaxis_title='Faturamento',
+                showlegend=False
+            )
+
             return fig
+
         else:
-            print(vendas)
+            return vendas
     
-    # * as mulheres gastam mais que homens
-    # ? as mulheres costumam dar avaliações positivas?
-    # ! não, as mulheres dão avaliações piores do que homens
     def vendas_por_genero(self, grafico: bool = True):
         vendas = self.df.groupby("genero")['total'].agg(['sum', 'mean', 'count']).reset_index().sort_values('sum', ascending=False)
         vendas['sum'] = round(vendas['sum'], 2)
@@ -55,22 +65,33 @@ class Loja:
 
         if grafico:
             fig = px.bar(vendas, 'genero', 'sum', color='genero')
-            fig.update_layout(xaxis_title='Genero do Cliente', yaxis_title='Faturamento', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Genero do Cliente',
+                yaxis_title='Faturamento',
+                showlegend=False
+            )
+
             return fig
+
         else:
-            print(vendas)
+            return vendas
     
     def vendas_por_periodo(self, periodo: str = 'W', grafico: bool = True):
         self.df['data'] = pd.to_datetime(self.df['data'])
-
         vendas = self.df.set_index('data').resample(periodo.upper())['total'].sum().reset_index()
 
         if grafico:
             fig = px.line(vendas, 'data', 'total', markers=True)
-            fig.update_layout(xaxis_title='Periodo', yaxis_title='Faturamento', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Periodo',
+                yaxis_title='Faturamento',
+                showlegend=False
+            )
+
             return fig
+
         else:
-            print(vendas)
+            return vendas
 
     @property
     def quantidade_total(self):
@@ -84,34 +105,37 @@ class Loja:
     def ticket_medio(self):
         return round(self.df['total'].mean(), 2)
 
-    # * os clientes preferem pagar com ewallet, mas gastam mais quando é no dinehiro.
     def metodos_pagamento_mais_usados(self, grafico: bool = True):
-        metodos = self.df.groupby("pagamento")['total'].agg(["mean", 'count', 'sum']).reset_index().sort_values('count', ascending=False)
-        metodos['mean'] = round(metodos['mean'], 2)
+        metodos = self.df.groupby("pagamento")['total'].count().reset_index()
 
         if grafico:
-            fig = px.pie(metodos, 'pagamento', 'sum', color='pagamento')
+            fig = px.pie(metodos, 'pagamento', 'total', color='pagamento')
             fig.update_traces(hole=0.7)
             fig.update_layout(legend_orientation='h')
+
             return fig
+
         else:
-            print(metodos)
+            return metodos
     
-    # * os clientes costumam comprar mais as 19h
-    # ! mas o volume maior de clientes acontece durante a tarde
     def horarios_pico(self, grafico: bool = True):
         self.df['hora'] = pd.to_datetime(self.df['hora'], format='%H:%M').dt.hour
         horarios = self.df.groupby('hora').size().reset_index(name='quantidade')
-        
+
         if grafico:
             fig = px.line(horarios, 'hora', 'quantidade', markers=True)
             fig.update_traces(line_shape='spline', line_smoothing=1.3)
-            fig.update_layout(xaxis_title='Horarios', yaxis_title='Numero de Vendas', showlegend=False)
-            return fig
-        else:
-            print(horarios)
+            fig.update_layout(
+                xaxis_title='Horarios',
+                yaxis_title='Numero de Vendas',
+                showlegend=False
+            )
 
-    # * a filial C tem as melhores avaliações
+            return fig
+
+        else:
+            return horarios
+
     def ranking_por_filial(self, grafico: bool = True):
         ranking = self.df.groupby('filial')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
@@ -119,10 +143,15 @@ class Loja:
         if grafico:
 <<<<<<< HEAD
             fig = px.bar(ranking, 'filial', 'ranking', color='filial')
-            fig.update_layout(xaxis_title='Filial', yaxis_title='Media de Avaliações', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Filial',
+                yaxis_title='Media de Avaliações',
+                showlegend=False
+            )
+
             return fig
+
         else:
-<<<<<<< HEAD
             return ranking
 =======
             fig = px.bar(ranking, 'filial', 'ranking', color='filial', range_y=[0, 10])
@@ -131,12 +160,7 @@ class Loja:
         else:
             print(ranking)
 >>>>>>> parent of 8db7601 (adicionar selectbox para graficos de avaliações)
-=======
-            print(ranking)
->>>>>>> parent of 6d6aa31 (enviando modificações)
 
-    # * alaviações relacionadas as comidas são geralmente melhores
-    # ! o setor de produtos pra casa tem o pior desempenho
     def ranking_por_categoria(self, grafico: bool = True):
         ranking = self.df.groupby('linha_produto')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
@@ -144,7 +168,6 @@ class Loja:
         if grafico:
 <<<<<<< HEAD
             fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto')
-<<<<<<< HEAD
             fig.update_layout(
                 xaxis_title='Linha do Produto',
                 yaxis_title='Media de Avaliações',
@@ -155,50 +178,115 @@ class Loja:
             fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', range_y=[0, 10])
             fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações', showlegend=False)
 >>>>>>> parent of 8db7601 (adicionar selectbox para graficos de avaliações)
-=======
-            fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações', showlegend=False)
->>>>>>> parent of 6d6aa31 (enviando modificações)
             return fig
+
         else:
-            print(ranking)
+            return ranking
     
-    # * homens costumam dar melhores avaliações
     def ranking_por_genero(self, grafico: bool = True):
         ranking = self.df.groupby('genero')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
             fig = px.bar(ranking, 'genero', 'ranking', color='genero')
-            fig.update_layout(xaxis_title='Genero do cliente', yaxis_title='Media de Avaliação', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Genero do cliente',
+                yaxis_title='Media de Avaliação',
+                showlegend=False
+            )
+
             return fig
+
         else:
-            print(ranking)
+            return ranking
     
-    # * o setor de comida continua sendo o maior triulfo da loja
     def margem_bruta_por_categoria(self, grafico: bool = True):
         margem = self.df.groupby('linha_produto')['renda_bruta'].sum().reset_index().sort_values('renda_bruta', ascending=False)
 
         if grafico:
             fig = px.pie(margem, 'linha_produto', 'renda_bruta', color='linha_produto')
             fig.update_traces(textposition='inside', textinfo='percent+label')
+            fig.update_layout(showlegend=True)
+
             return fig
+
         else:
-            print(margem)
+            return margem
+
+    def margem_bruta_por_periodo(self, grafico: bool = True):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+
+        margem = self.df.resample('W')['renda_bruta'].sum().reset_index()
+
+        if grafico:
+            fig = px.line(margem, 'data', 'renda_bruta', markers=True)
+            fig.update_layout(
+                xaxis_title='Periodo',
+                yaxis_title='Faturamento Bruto',
+                showlegend=False
+            )
+
+            return fig
+
+        else:
+            return margem
     
-    # * membros costuma  gastar um pouco mais
     def ticket_por_tipo_cliente(self, grafico: bool = True):
         ticket = self.df.groupby('tipo_cliente')['total'].mean().reset_index(name='ticket_medio').sort_values('ticket_medio', ascending=False)
         ticket['ticket_medio'] = round(ticket['ticket_medio'], 2)
 
         if grafico:
             fig = px.bar(ticket, 'tipo_cliente', 'ticket_medio', color='tipo_cliente')
-            fig.update_layout(xaxis_title='Tipo de cliente', yaxis_title='Ticket Medio', showlegend=False)
+            fig.update_layout(
+                xaxis_title='Tipo de cliente',
+                yaxis_title='Ticket Medio',
+                showlegend=False
+            )
+
             return fig
+
         else:
-            print(ticket)
+            return ticket
     
+    def ticket_medio_por_periodo(self):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+        ticket = self.df.resample('2W')['total'].mean().reset_index()
+
+        return ticket
+    
+    def quantidade_por_periodo(self):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+        quantidade = self.df.resample('2W')['quantidade'].count().reset_index()
+
+        return quantidade
+
+    def comparativo_faturamento(self, grafico: bool = True):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+
+        resumo = self.df.resample('W').agg({'total': 'sum', 'renda_bruta': 'sum'}).reset_index()
+
+
+        if grafico:
+            fig = px.area(resumo, 'data', ['renda_bruta', 'total'], markers=True)
+            fig.update_layout(
+                xaxis_title='Periodo',
+                yaxis_title='Valor (R$)',
+                showlegend=False
+            )
+
+            return fig
+
+        else:
+            return margem
+
+
+
 caminho = Path('dados')
 arquivo = caminho / 'supermarket_sales.csv'
 
 df = pd.read_csv(arquivo, sep=',')
-store = Loja(df=df
+store = Loja(df=df)
