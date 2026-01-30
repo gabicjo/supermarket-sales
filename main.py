@@ -250,7 +250,25 @@ class Loja:
 
         return quantidade
 
+    def comparativo_faturamento(self, grafico: bool = True):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
 
+        resumo = self.df.resample('W').agg({'total': 'sum', 'renda_bruta': 'sum'}).reset_index()
+
+
+        if grafico:
+            fig = px.area(resumo, 'data', ['renda_bruta', 'total'], markers=True)
+            fig.update_layout(
+                xaxis_title='Periodo',
+                yaxis_title='Valor (R$)',
+                showlegend=False
+            )
+
+            return fig
+
+        else:
+            return margem
 
 
 
