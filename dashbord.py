@@ -59,6 +59,7 @@ with col1:
     st.plotly_chart(store.comparativo_faturamento())
 
 ctn_faturamento = st.container(border=True)
+ctn_avaliações = st.container(border=True)
 
 ctn_faturamento.write("### 📊 Grafico de Faturamento")
 ctn_faturamento.write("Acompanhe o faturamento do seu negocio atravez de diferentes aspectos! Selecione um abaixo:")
@@ -82,3 +83,23 @@ elif fat_choice == lista_fat[2]:
 
 elif fat_choice == lista_fat[3]:
     ctn_faturamento.plotly_chart(store.vendas_por_tipo_cliente())
+
+ctn_avaliações.write('### ⭐ Grafico de Avaliações')
+ctn_avaliações.write("Companhe o que as pessoas pensam sobre seu negocio atravez de diferentes aspectos! Selecione um deles abaixo: ")
+
+rank_choice = ctn_avaliações.pills(
+    "Tipo de Grafico",
+    lista_rank,
+    selection_mode='single',
+    label_visibility='collapsed',
+    default='Ranking por Filial'
+)
+
+if rank_choice == lista_rank[0]:
+    ctn_avaliações.plotly_chart(store.ranking_por_filial())
+
+elif rank_choice == lista_rank[1]:
+    ctn_avaliações.plotly_chart(store.ranking_por_categoria())
+    
+elif rank_choice == lista_rank[2]:
+    ctn_avaliações.plotly_chart(store.ranking_por_genero())
