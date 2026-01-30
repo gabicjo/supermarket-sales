@@ -1,13 +1,14 @@
 ## 💻 Tecnologias
 - Python
 - UV (gerenciador de pacotes)
-- Pandas
-- Pathlib
+- Pandas (pd)
+- Pathlib (Path)
 - Plotly Express (px)
+- Locale
+- Streamlit (st)
 
 ## 🚀 Funcionalidades
-Esse projeto não tem muitas funcionalidades em si, **o objetivo dele é analisar uma planilha com dados de um supermercado ficticio dos Estados Unidos**, obtendo assim dados como o faturamento por periodo, quanto cada tipo de cliente gasta, entre outras.
-O objetivo de conseguir essas informações é melhorar e ajudar nos investimentos e marketing de uma empresa, por exemplo.
+Esse sistema tem como objetivo gerar um dash board interativo com dados de um supermercado fictico (dados tirados do kaggle). Os dados foram extraidos de uma planilhas e filtrados detalhadamente com os filtros do pandas, que geraram dados precisos. Então foi criada uma interface web utilizando Streamlit, que mostra esses graficos de forma visual e interativa.
 
 v2: Agora esse projeto conta com uma **geração de graficos** utilizando a biblioteca plotly.express, o principal objetivo disso e gerar insights avançados para o usuario. Foram feitos os seguintes tipos de graficos:
 - Grafico de linhas (px.line)
@@ -15,10 +16,12 @@ v2: Agora esse projeto conta com uma **geração de graficos** utilizando a bibl
 - grafico de colunas (px.bar)
 
 ## 📍 Processo
-O processo de criação durou aproximadamente 4h, com esse projeto, aprendi a utilizar das propria ferramentas do python, como funções e classes, para melhorar a legibilidade e usabilidade do codigo em si, alêm de utilizar ferramentas de IA como o copilot do VSCode para acelerar partes repetitivas
+O processo de criação durou aproximadamente 7 dias, com esse projeto, aprendi a utilizar das propria ferramentas do python, como funções e classes, para melhorar a legibilidade e usabilidade do codigo em si, alêm de utilizar ferramentas de IA como o copilot do VSCode para acelerar partes repetitivas
 Levando em conta que quando fiz esse projeto, eu era um completo iniciante, acredito que fiz um bom trabalho.
 
 ## 🚦 Como executar?
-1. Baixe os arquivos ou clone o repositorio
-2. Execute o arquivo `app.exe`
-3. Siga as instruções do terminal
+1. Clone o repositorio
+2. Baixe as dependencias de `dependencias.txt`
+3. Abra um terminal na pasta do projeto
+4. Digite `streamlit run dashboard.py`
+5. Aproveite 
