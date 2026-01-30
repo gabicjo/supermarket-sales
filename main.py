@@ -91,8 +91,7 @@ class Loja:
 
         if grafico:
             fig = px.pie(metodos, 'pagamento', 'sum', color='pagamento')
-            fig.update_traces(hole=0.7)
-            fig.update_layout(legend_orientation='h')
+            fig.update_traces(textposition='inside', textinfo='percent+label')
             return fig
         else:
             print(metodos)
