@@ -29,18 +29,28 @@ with col1:
     a.metric(
         "📦 Produtos Vendidos:", 
         store.quantidade_total, 
-        border=True
+        border=True, 
+        chart_data=list(store.quantidade_por_periodo()['quantidade']), 
+        chart_type='Area', 
+        delta=list(store.quantidade_por_periodo()['quantidade'])[-1]
         )
 
     b.metric(
         "💰 Faturamento Total:", 
         moeda_local(store.total_vendido), 
-        border=True
+        border=True, 
+        chart_data=list(store.vendas_por_periodo(grafico=False)['total']), 
+        chart_type='Area', 
+        delta=moeda_local(list(store.vendas_por_periodo(grafico=False)['total'])[-1])
         )
 
     c.metric(
         "🎫 Ticket Medio:", 
         locale.currency(store.ticket_medio, grouping=True), 
-        border=True)
+        border=True, 
+        chart_data=list(store.ticket_medio_por_periodo()['total']), 
+        chart_type='Area',
+        delta=moeda_local(list(store.ticket_medio_por_periodo()['total'])[-1])
+        )
 
     st.plotly_chart(store.comparativo_faturamento())
