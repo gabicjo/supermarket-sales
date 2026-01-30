@@ -199,6 +199,25 @@ class Loja:
 
         else:
             return margem
+
+    def margem_bruta_por_periodo(self, grafico: bool = True):
+        self.df['data'] = pd.to_datetime(self.df['data'])
+        self.df = self.df.set_index(self.df['data'])
+
+        margem = self.df.resample('W')['renda_bruta'].sum().reset_index()
+
+        if grafico:
+            fig = px.line(margem, 'data', 'renda_bruta', markers=True)
+            fig.update_layout(
+                xaxis_title='Periodo',
+                yaxis_title='Faturamento Bruto',
+                showlegend=False
+            )
+
+            return fig
+
+        else:
+            return margem
     
     def ticket_por_tipo_cliente(self, grafico: bool = True):
         ticket = self.df.groupby('tipo_cliente')['total'].mean().reset_index(name='ticket_medio').sort_values('ticket_medio', ascending=False)
