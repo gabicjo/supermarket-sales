@@ -5,6 +5,9 @@ import plotly.express as px
 import locale
 
 # extrair dados
+lista_fat = ('Faturamento por Filial', 'Faturamento por Linha', 'Faturamento por Genero', 'Faturamento por Tipo de Cliente')
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 nome = "Gabriel"
 
 def moeda_local(valor):
@@ -54,3 +57,28 @@ with col1:
         )
 
     st.plotly_chart(store.comparativo_faturamento())
+
+ctn_faturamento = st.container(border=True)
+
+ctn_faturamento.write("### 📊 Grafico de Faturamento")
+ctn_faturamento.write("Acompanhe o faturamento do seu negocio atravez de diferentes aspectos! Selecione um abaixo:")
+
+fat_choice = ctn_faturamento.pills(
+    "Tipo de Grafico",
+    lista_fat,
+    selection_mode='single',
+    label_visibility='collapsed',
+    default='Faturamento por Filial'
+)
+
+if fat_choice == lista_fat[0]:
+    ctn_faturamento.plotly_chart(store.vendas_por_filial())
+
+elif fat_choice == lista_fat[1]:
+    ctn_faturamento.plotly_chart(store.vendas_por_linha())
+
+elif fat_choice == lista_fat[2]:
+    ctn_faturamento.plotly_chart(store.vendas_por_genero())
+
+elif fat_choice == lista_fat[3]:
+    ctn_faturamento.plotly_chart(store.vendas_por_tipo_cliente())
