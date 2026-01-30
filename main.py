@@ -141,6 +141,7 @@ class Loja:
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
+<<<<<<< HEAD
             fig = px.bar(ranking, 'filial', 'ranking', color='filial')
             fig.update_layout(
                 xaxis_title='Filial',
@@ -152,12 +153,20 @@ class Loja:
 
         else:
             return ranking
+=======
+            fig = px.bar(ranking, 'filial', 'ranking', color='filial', range_y=[0, 10])
+            fig.update_layout(xaxis_title='Filial', yaxis_title='Media de Avaliações', showlegend=False)
+            return fig
+        else:
+            print(ranking)
+>>>>>>> parent of 8db7601 (adicionar selectbox para graficos de avaliações)
 
     def ranking_por_categoria(self, grafico: bool = True):
         ranking = self.df.groupby('linha_produto')['avaliacao'].mean().reset_index(name="ranking").sort_values('ranking', ascending=False)
         ranking['ranking'] = round(ranking['ranking'], 2)
 
         if grafico:
+<<<<<<< HEAD
             fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto')
             fig.update_layout(
                 xaxis_title='Linha do Produto',
@@ -165,6 +174,10 @@ class Loja:
                 showlegend=False
             )
 
+=======
+            fig = px.bar(ranking, 'linha_produto', 'ranking', color='linha_produto', range_y=[0, 10])
+            fig.update_layout(xaxis_title='Linha do Produto', yaxis_title='Media de Avaliações', showlegend=False)
+>>>>>>> parent of 8db7601 (adicionar selectbox para graficos de avaliações)
             return fig
 
         else:
